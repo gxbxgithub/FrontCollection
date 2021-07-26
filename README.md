@@ -1,1 +1,3 @@
-# FrontCollection
+# 前端知识点汇总
+
+## 1.设计模式
