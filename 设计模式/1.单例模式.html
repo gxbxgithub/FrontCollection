@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>单例模式</title>
+</head>
+
+<body>
+  <script>
+    /**
+    定义：保证一个类仅有一个实例，并提供一个访问它的全局访问点
+    */
+    // 提取通用的单例
+    function getSingleton(fn) {
+      let instance = null;
+
+      return function () {
+        if (!instance) {
+          instance = fn.apply(this, arguments);
+        }
+        return instance;
+      }
+    }
+
+    // 1. manager
+    function SetManager(name) {
+      this.name = name;
+    }
+    SetManager.prototype.getName = function () {
+      console.log(this.name);
+    }
+
+    let managerSingleton = getSingleton(function (name) {
+      let manager = new SetManager(name);
+      return manager;
+    })
+
+    managerSingleton('aaa').getName();
+    managerSingleton('bbb').getName();
+    managerSingleton('ccc').getName();
+
+
+    // 2. hr
+    function SetHr(name) {
+      this.hr = name;
+    }
+    SetHr.prototype.getName = function () {
+      console.log(this.hr);
+    }
+
+    let hrSingleton = getSingleton(function (name) {
+      let hr = new SetHr(name);
+      return hr;
+    })
+
+    hrSingleton('hrhrhr').getName();
+    hrSingleton('hhhhh').getName();
+    hrSingleton('rrrrr').getName();
+
+  </script>
+</body>
+
+</html>
