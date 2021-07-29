@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>策略模式</title>
+</head>
+
+<body>
+  <script>
+    /**
+    1. 定义：定义一系列的算法，把它们一个个封装起来，并且使它们可以相互替换。
+    2. 核心：算法实现 和 算法使用 分离开
+            基于策略模式的程序至少由两部分组成：
+            （1）策略类：封装具体算法，负责具体的计算过程
+            （2）环境类：接收请求，把请求委托给策略类
+    3. 优缺点：
+            优点：可以有效地避免多重条件语句，将一系列方法封装起来也更直观，利于维护
+            缺点：往往策略集会比较多，我们需要事先就了解定义好所有的情况
+    */
+
+    /** 实例 1 **/
+    /** 实例 1 **/
+    /** 实例 1 **/
+
+    // 加权映射关系
+    var levelMap = {
+      S: 10,
+      A: 8,
+      B: 6,
+      C: 4
+    };
+
+    // 组策略
+    var scoreLevel = {
+      basicScore: 80,
+
+      S: function () {
+        return this.basicScore + levelMap['S'];
+      },
+
+      A: function () {
+        return this.basicScore + levelMap['A'];
+      },
+
+      B: function () {
+        return this.basicScore + levelMap['B'];
+      },
+
+      C: function () {
+        return this.basicScore + levelMap['C'];
+      }
+    }
+
+    // 调用
+    function getScore(level) {
+      return scoreLevel[level] ? scoreLevel[level]() : 0;
+    }
+
+    console.log(
+      getScore('S'),
+      getScore('A'),
+      getScore('B'),
+      getScore('C'),
+      getScore('D')
+    ); // 90 88 86 84 0
+
+
+
+
+
+
+    /** 实例 2 **/
+    /** 实例 2 **/
+    /** 实例 2 **/
+    // 错误提示
+    var errorMsgs = {
+      default: '输入数据格式不正确',
+      minLength: '输入数据长度不足',
+      isNumber: '请输入数字',
+      required: '内容不为空'
+    };
+
+    // 规则集
+    var rules = {
+      minLength: function (value, length, errorMsg) {
+        if (value.length < length) {
+          return errorMsg || errorMsgs['minLength']
+        }
+      },
+      isNumber: function (value, errorMsg) {
+        if (!/\d+/.test(value)) {
+          return errorMsg || errorMsgs['isNumber'];
+        }
+      },
+      required: function (value, errorMsg) {
+        if (value === '') {
+          return errorMsg || errorMsgs['required'];
+        }
+      }
+    };
+
+    // 校验器
+    function Validator() {
+      this.items = [];
+    };
+
+    Validator.prototype = {
+      constructor: Validator,
+
+      // 添加校验规则
+      add: function (value, rule, errorMsg) {
+        var arg = [value];
+
+        if (rule.indexOf('minLength') !== -1) {
+          var temp = rule.split(':');
+          arg.push(temp[1]);
+          rule = temp[0];
+        }
+
+        arg.push(errorMsg);
+
+        this.items.push(function () {
+          // 进行校验
+          return rules[rule].apply(this, arg);
+        });
+      },
+
+      // 开始校验
+      start: function () {
+        for (var i = 0; i < this.items.length; ++i) {
+          var ret = this.items[i]();
+
+          if (ret) {
+            console.log(ret);
+            // return ret;
+          }
+        }
+      }
+    };
+
+    // 测试数据
+    function testTel(val) {
+      return val;
+    }
+
+    var validate = new Validator();
+
+    validate.add(testTel('ccc'), 'isNumber', '只能为数字'); // 只能为数字
+    validate.add(testTel(''), 'required'); // 内容不为空
+    validate.add(testTel('123'), 'minLength:5', '最少5位'); // 最少5位
+    validate.add(testTel('12345'), 'minLength:5', '最少5位');
+
+    var ret = validate.start();
+
+    console.log(ret);
+  </script>
+</body>
+
+</html>
