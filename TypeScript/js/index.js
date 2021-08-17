@@ -1,4 +1,14 @@
 /**
+ * 类型注解
+ */
+(function () {
+    function showMsg(msg) {
+        return '窗前明月光，' + msg;
+    }
+    var msg = ''; //[1, 2]
+    console.log(showMsg(msg));
+})();
+/**
  * 枚举
  */
 (function () {
