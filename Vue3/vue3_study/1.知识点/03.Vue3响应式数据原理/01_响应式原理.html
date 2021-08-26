@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    // 目标对象
+    const user = {
+      name: '佐助',
+      age: 20,
+      wifi: {
+        name: '小樱',
+        age: 19
+      }
+    }
+    // 目标对象 => 代理对象
+    // - 参数1：target 目标对象
+    // - 参数2：handler 处理器对象，用来监视数据，及数据的操作
+    const proxyUser = new Proxy(user, {
+      get(target, property) {
+        console.log('get')
+        // 配合 Reflect（反射对象）使用
+        return Reflect.get(target, property)
+      },
+      set(target, property, value) {
+        console.log('set')
+        Reflect.set(target, property, value)
+      },
+      deleteProperty(target, property) {
+        console.log('delete')
+        Reflect.deleteProperty(target, property)
+      }
+    })
+
+    // 通过代理对象获取目标对象中的某个属性值
+    console.log(proxyUser.name)
+    console.log('==================')
+    // 通过代理对象更新目标对象中的某个属性值
+    proxyUser.name = '鸣人'
+    console.log(user)
+    console.log('==================')
+    // 通过代理对象向目标对象中添加一个新的属性
+    proxyUser.gender = '男'
+    console.log('add', user)
+    console.log('==================')
+    // 通过代理对象删除目标对象中的某个属性
+    delete proxyUser.name
+    console.log('delete', user)
+  </script>
+</body>
+
+</html>

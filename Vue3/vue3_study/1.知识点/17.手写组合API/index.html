@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script src="./index.js"></script>
+  <script>
+    const proxyUser1 = shallowReactive({
+      name: '小明',
+      car: {
+        color: 'red'
+      }
+    })
+    // 拦截到了读和写数据
+    // proxyUser1.name += '=='
+    // 拦截到读取数据，没有拦截到写数据
+    // proxyUser1.car.color += '--'
+    // 拦截了删除数据
+    // delete proxyUser1.name
+    // 拦截了读取数据
+    // delete proxyUser1.car.color
+
+
+    const proxyUser2 = reactive({
+      name: '小明',
+      car: {
+        color: 'red'
+      }
+    })
+    // 拦截到了读和写数据
+    // proxyUser2.name += '=='
+    // 拦截到了读和写数据
+    // proxyUser2.car.color += '--'
+    // 拦截了删除数据
+    // delete proxyUser2.name
+    // 拦截了读取数据和删除数据
+    // delete proxyUser2.car.color
+
+
+
+    console.log(isRef(ref({})))
+    console.log(isReactive(reactive({})))
+    console.log(isReadonly(readonly({})))
+    console.log(isProxy(reactive({})))
+    console.log(isProxy(readonly({})))
+  </script>
+</body>
+
+</html>
