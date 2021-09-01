@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1px 物理像素实现</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    #box {
+      /*width: 200px;
+      height: 200px;*/
+      width: 0.5rem;
+      height: 0.5rem;
+      border-bottom: 1px solid #000;
+    }
+
+    /* 第二套实现方案 */
+    #box2 {
+      width: 200px;
+      height: 200px;
+      position: relative;
+    }
+    #box2:before{
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%; 
+      height: 1px;
+    }
+    @media screen and (-webkit-min-device-pixel-ratio: 2) {
+      #box2:before{
+        transform: scaleY(0.5);
+      }
+    }
+    @media screen and (-webkit-min-device-pixel-ratio: 3) {
+      #box2:before{
+        transform: scaleY(0.333);
+      }
+    }
+  </style>
+  <!-- 像素比 = 物理像素 / css像素 -->
+</head>
+
+<body>
+  <div id="box"></div>
+  <div id="box2"></div>
+
+  <script>
+    window.onload = function () {
+      // 像素比
+      var dpr = window.devicePixelRatio
+      // 缩放比例
+      var scale = 1 / dpr
+      var width = document.documentElement.clientWidth
+      // 获取meta标签
+      var metaNode = document.querySelector('meta[name="viewport"]')
+      metaNode.setAttribute('content', 'width=device-width, initial-scale=' + scale)
+      // 页面中元素宽高，比例反向乘回来
+      var htmlNode = document.querySelector('html')
+      htmlNode.style.fontSize = width * dpr + 'px'
+    }
+  </script>
+</body>
+
+</html>
