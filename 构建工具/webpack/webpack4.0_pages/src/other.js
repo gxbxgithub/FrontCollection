@@ -7,3 +7,19 @@ xhr.onload = function () {
 }
 
 xhr.send()
+
+import './a.js'
+import './b.js'
+console.log('other.js -------------1')
+
+// import $ from 'jquery'
+// $('body').css('background', 'blue')
+
+/**
+ * 热更新
+ */
+if (module.hot) {
+  module.hot.accept('./a.js', () => {
+    console.log('a.js 更新了')
+  })
+}
