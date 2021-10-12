@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>标签页组件</title>
+</head>
+<body>
+
+    <div id="app">
+        <tabs active-index="1">
+            <pane name="1" label="标签一">
+                标签一内容
+            </pane>
+            <pane name="2" label="标签二">
+                标签二内容
+            </pane>
+            <pane name="3" label="标签三">
+                标签三内容
+            </pane>
+        </tabs>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <script type="text/x-template" id="tabs">
+        <div class="tabs">
+            <div class="tabs-bar">
+                <!-- 标题 -->
+                <p 
+                    :class="['tabs-tab', currentActiveIndex == item.name ? 'tabs-tab-active' : '']"
+                    v-for="(item, index) in navList"
+                    @click="handleChange(index)">
+                    {{ item.label }}
+                </p>
+            </div>
+            <div class="tabs-content">
+                <!-- 内容 slot 嵌套 pane -->
+                <slot></slot>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/x-template" id="pane">
+        <div class="pane" v-show="show">
+            <slot></slot>
+        </div>
+    </script>
+
+    <script>
+        Vue.component('tabs', {
+            template: '#tabs',
+            props: {
+                activeIndex: [String, Number]
+            },
+            data: function() {
+                return {
+                    currentActiveIndex: this.activeIndex,
+                    navList: []
+                }
+            },
+            methods: {
+                getTabs() {
+                    var tabs = this.$children.filter(function(item){
+                        return item.$options.name === 'pane'
+                    })
+                    return tabs
+                },
+                updateNav() {
+                    this.navList = []
+                    var _this = this
+                    this.getTabs().forEach(function(pane, index) {
+                        _this.navList.push({
+                            label: pane.label,
+                            name: pane.name || index
+                        })
+                        if (!pane.name) pane.name = index
+                        if (index == 0) {
+                            if (!_this.currentActiveIndex) {
+                                _this.currentActiveIndex = pane.name || index
+                            }
+                        }
+                    })
+                    this.updateStatus()
+                },
+                updateStatus() {
+                    var tabs = this.getTabs()
+                    var _this = this
+                    tabs.forEach(function(tab){
+                        return tab.show = tab.name === _this.currentActiveIndex
+                    })
+                },
+                handleChange(index) {
+                    var nav = this.navList[index]
+                    var name = nav.name
+                    this.currentActiveIndex = name
+                    this.$emit('input', name)
+                }
+            },
+            watch: {
+                activeIndex(val) {
+                    this.currentActiveIndex = val
+                },
+                currentActiveIndex() {
+                    this.updateStatus()
+                }
+            }
+        })
+
+        Vue.component('pane', {
+            template: '#pane',
+            props: {
+                name: String,
+                label: {
+                    type: String,
+                    default: ''
+                }
+            },
+            data: function() {
+                return {
+                    show: true
+                }
+            },
+            methods: {
+                updateNav() {
+                    this.$parent.updateNav()
+                }
+            },
+            watch: {
+                label() {
+                    this.updateNav()
+                }
+            },
+            mounted() {
+                this.updateNav()
+            }
+        })
+
+        var app = new Vue({
+            el: '#app',
+            data: {
+                
+            }
+        })
+    </script>
+
+</body>
+</html>

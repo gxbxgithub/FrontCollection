@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        let ARRAY_METHOD = [
+            'push',
+            'pop',
+            'shift',
+            'unshift',
+            'reverse',
+            'sort',
+            'splice',
+        ];
+        // 继承关系：arr -> Array.prototype -> Object.prototype -> ...
+        // 调整:    arr -> 改写的方法 -> Array.prototype -> Object.prototype -> ...
+        let array_methods = Object.create( Array.prototype );
+        // 重写 ARRAY_METHOD 里面的方法
+        ARRAY_METHOD.forEach( method => {
+            array_methods[ method ] = function() {
+                // 调用原来的方法
+                console.log('调用的是拦截的 ' + method + ' 方法');
+
+                // ** 这里将数据进行响应式化 **
+                for (let i = 0; i < arguments.length; i ++) {
+                    reactify( arguments[i] ); 
+                }
+                
+                let rst = Array.prototype[ method ].apply( this, arguments );
+                return rst;
+            }
+        } );
+
+
+
+
+        let data = {
+            name: '张三',
+            age: 19,
+            course: [
+                {name: '语文'},
+                {name: '数学'},
+                {name: '英语'}
+            ]
+        }; // 除了递归还有队列（深度优先转换为广度优先）
+
+        function defineReactive (target, key, value, enumerable) {
+            if (typeof value === 'object' && value != null && !Array.isArray(value)) {
+                reactify(value);
+            }
+
+            Object.defineProperty( target, key, {
+                configurable: true,
+                enumerable: !!enumerable,
+                get() {
+                    console.log(`读取属性 ${key} 的值 ${value}`)
+                    return value;
+                },
+                set(newVal) {
+                    console.log(`赋值属性 ${key} 的值 ${newVal}`)
+                    value = newVal;
+                }
+            })
+        }
+        
+        // 将对象o响应式化
+        function reactify( o ) {
+            let keys = Object.keys( o );
+            for (let i = 0; i < keys.length; i ++) {
+                let key = keys[i];
+                let value = o[ key ];
+                // 判断属性是不是引用类型，判断是不是数组
+                // 如果是引用类型，就需要递归；
+                // 如果是数组，就需要循环数组，将数组里面的元素进行响应式化
+                if (Array.isArray(value)) {
+                    // 数组
+                    value.__proto__ = array_methods; // ** 数组就可以响应式了
+
+                    for (let j = 0; j < value.length; j ++) {
+                        reactify(value[j]);
+                    }
+                } else {
+                    // 对象或值类型
+                    defineReactive( o, key, value, true );
+                }
+            }
+        }
+
+        reactify(data)
+    </script>
+</body>
+</html>

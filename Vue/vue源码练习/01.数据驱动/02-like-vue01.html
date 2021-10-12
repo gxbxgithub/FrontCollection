@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模仿 Vue</title>
+</head>
+<body>
+    <div id="root">
+        {{ name }}
+        <p>{{ name }}</p>
+        <p>{{ message }}</p>
+    </div>
+
+    <script>
+        let rkuohao = /\{\{(.+?)\}\}/g;
+        
+        /** 
+        步骤拆解：
+        1. 拿到模板
+        2. 拿到数据（data）
+        3. 将模板与数据结合，得到HTML元素（DOM元素）
+        4. 放到页面中
+        */
+
+        // 1
+        let tmpNode = document.querySelector('#root');
+        // 2
+        let data = {
+            name: 'guoxb',
+            message: '一个消息'
+        }
+        // 3. 数据放到模板中（？？？）
+        // 一般都是使用 递归
+        // 我们的案例中 template 是 DOM 元素
+        // 在真正的 Vue 源码中是： DOM -> 字符串模板 -> VNode -> 真正的 DOM
+        function compiler( template, data ) {
+            let childNodes = template.childNodes; // 获取子元素
+            for (let i = 0; i < childNodes.length; i ++) {
+                let type = childNodes[i].nodeType; // 1 元素，3 文本节点
+                if (type === 3) {
+                    // 文本节点，可以判断里面是否有 {{}} 插值
+                    let txt = childNodes[i].nodeValue; // 该属性只有文本节点才有意义
+
+                    // 有没有双括号 {{}}
+                    txt = txt.replace(rkuohao, function(_, g) { // replace 使用正则匹配一次，函数就会调用一次
+                                                      // 函数 第 0 个参数 表示匹配到的内容
+                                                      // 函数 第 n 个参数 表示正则中的第 n 组 
+                        let key = g.trim(); // 写在双花括号里面的内容
+                        let value = data[key];
+
+                        return value; // 用 value 替换 {{ xxx }}
+                    });
+
+                    childNodes[i].nodeValue = txt;
+                } else if (type === 1) {
+                    // 元素，考虑它有没有子元素，是否需要将其子元素进行 判断是否要插值
+                    compiler(childNodes[i], data);
+                }
+            }
+        }
+
+
+        let generateNode = tmpNode.cloneNode(true); // 注意：这里是DOM元素，可以这么用
+
+        console.log(tmpNode);
+        compiler(generateNode, data);
+        console.log(generateNode);
+
+        // 4
+        root.parentNode.replaceChild(generateNode, root);
+
+
+        /**
+        以上思路存在很大问题：
+        1. Vue 使用的是虚拟 DOM
+        2. 只考虑了 单属性（ {{ name }} ），而 Vue 中大量的使用层级（ {{ child.name.firstName }} ）
+        3. 代码没有整合
+        */
+    </script>
+</body>
+</html>

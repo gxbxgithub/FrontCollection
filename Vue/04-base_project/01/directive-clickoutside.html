@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>下拉框点击外部区域关闭</title>
+    <style>
+        .main{background: lightblue;}
+        .list_view{background: gray; width: 100px; height: 200px; font-size: 14px; text-align: center; color: #333;}
+    </style>
+</head>
+<body>
+
+    <div id="app">
+        <div class="main" v-closeoutside="handleClose">
+            <button @click="show = !show">下拉菜单</button>
+            <div class="list_view" v-show="show">
+                菜单内容
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <script>
+        Vue.directive('closeoutside', {
+            bind: function(el, binding, vnode) {
+                console.log(binding)
+                console.log(vnode)
+                function documentHandler(e) {
+                    if (el.contains(e.target)) {
+                        return false
+                    }
+                    if (binding.expression) {
+                        // binding.value 就是函数 handleClose，调用这个函数
+                        binding.value()
+                    }
+                }
+                el.__vueClickOutSide__ = documentHandler
+                document.addEventListener('click', documentHandler)
+            },
+            unbind: function(el) {
+                document.removeEventListener('click', el.__vueClickOutSide__)
+                delete el.__vueClickOutSide__
+            }
+        })
+
+        var app = new Vue({
+            el: '#app',
+            data: {
+                show: false
+            },
+            methods: {
+                handleClose: function(){
+                    this.show = false
+                }
+            }
+        })
+    </script>
+
+</body>
+</html>

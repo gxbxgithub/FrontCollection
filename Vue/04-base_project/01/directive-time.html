@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>实时时间转换</title>
+</head>
+<body>
+
+    <div id="app">
+        <div v-time="timeNow"></div>
+        <div v-time="timeBefore"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="../js/time.js"></script>
+
+    <script>
+        Vue.directive('time', {
+            bind: function(el, binding) {
+                el.innerHTML = Time.getFormatTime(binding.value)
+                var timeInternal = setInterval(function(){
+                    el.innerHTML = Time.getFormatTime(binding.value)
+                }, 60000)
+                el.__vueTime__ = timeInternal
+            },
+            unbind: function(el) {
+                clearInterval(el.__vueTime__)
+                delete el.__vueTime__
+            }
+        })
+
+        var app = new Vue({
+            el: '#app',
+            data: {
+                timeNow: (new Date()).getTime(),
+                timeBefore: 1488930695721
+            }
+        })
+    </script>
+
+</body>
+</html>

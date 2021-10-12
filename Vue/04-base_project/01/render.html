@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Render函数</title>
+</head>
+<body>
+
+    <div id="app">
+        <!-- v-model -->
+        <ele></ele>
+        <br><br>
+        <!-- chatroom -->
+        <chatroom></chatroom>
+        <br><br>
+        <!-- slot -->
+        <slotv>
+            <p>我是slot</p>
+        </slotv>
+    </div>
+
+    <script src="../js/vue.js"></script>
+
+    <script>
+        /* v-model 示例 */
+        Vue.component('ele', {
+            render: function(createElement) {
+                var _this = this
+                return createElement('div', [
+                    createElement('input', {
+                        domProps: {
+                            value: this.message
+                        },
+                        on: {
+                            input: function(event) {
+                                _this.message = event.target.value
+                            }
+                        }
+                    }),
+                    createElement('p', 'message: '+this.message)
+                ])
+            },
+            data(){
+                return {
+                    message: ''
+                }
+            }
+        })
+
+        /* 聊天 */
+        Vue.component('chatroom', {
+            render: function(createElement) {
+                var _this = this
+                // 1. 创建列表
+                if (this.list.length) {
+                    var listNode = createElement('ul', this.list.map(function(item) {
+                        return createElement('li', item)
+                    }))
+                } else {
+                    var listNode = createElement('p', '暂无聊天记录~')
+                }
+                return createElement('div', [
+                    listNode,
+                    createElement('input', {
+                        attr: {
+                            placeholder: '请输入内容'
+                        },
+                        style: {
+                            width: '200px'
+                        },
+                        on: {
+                            keyup: function(event) {
+                                if (event.keyCode != 13 || event.target.value.trim().length == 0) return
+                                // 发送数据
+                                _this.list.push(event.target.value)
+                                event.target.value = ''
+                            }
+                        }
+                    })
+                ])
+            },
+            data() {
+                return {
+                    list: []
+                }
+            }
+        })
+
+        /* slot */
+        Vue.component('slotv', {
+            render: function(createElement) {
+                if (this.$slots.default === undefined) {
+                    return createElement('div', '没有使用 slot 时显示的文本')
+                } else {
+                    return createElement('div', this.$slots.default)
+                }
+            }
+        })
+
+        var app = new Vue({
+            el: '#app'
+        })
+    </script>
+
+</body>
+</html>
