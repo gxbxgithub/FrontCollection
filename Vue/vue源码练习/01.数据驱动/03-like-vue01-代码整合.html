@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>模仿 Vue - 抽取 GVue 构造函数</title>
 </head>
+
 <body>
     <div id="root">
         {{ name }}
@@ -15,18 +17,18 @@
 
     <script>
         let rkuohao = /\{\{(.+?)\}\}/g;
-        function compiler( template, data ) {
+        function compiler(template, data) {
             let childNodes = template.childNodes; // 获取子元素
-            for (let i = 0; i < childNodes.length; i ++) {
+            for (let i = 0; i < childNodes.length; i++) {
                 let type = childNodes[i].nodeType; // 1 元素，3 文本节点
                 if (type === 3) {
                     // 文本节点，可以判断里面是否有 {{}} 插值
                     let txt = childNodes[i].nodeValue; // 该属性只有文本节点才有意义
 
                     // 有没有双括号 {{}}
-                    txt = txt.replace(rkuohao, function(_, g) { // replace 使用正则匹配一次，函数就会调用一次
-                                                      // 函数 第 0 个参数 表示匹配到的内容
-                                                      // 函数 第 n 个参数 表示正则中的第 n 组 
+                    txt = txt.replace(rkuohao, function (_, g) { // replace 使用正则匹配一次，函数就会调用一次
+                        // 函数 第 0 个参数 表示匹配到的内容
+                        // 函数 第 n 个参数 表示正则中的第 n 组 
                         let key = g.trim(); // 写在双花括号里面的内容
                         let value = data[key];
 
@@ -42,7 +44,7 @@
         }
 
 
-        function GVue( options ) {
+        function GVue(options) {
             // 习惯：内部数据使用 下划线 开头，只读数据使用 $ 开头
             this._data = options.data;
             this._el = options.el;
@@ -56,19 +58,19 @@
         }
 
         /** 将模板结合数据，得到HTML加到页面 */
-        GVue.prototype.render = function() {
+        GVue.prototype.render = function () {
             this.compiler();
         };
 
         /** 编译 将模板与数据结合，得到真正的DOM元素 */
-        GVue.prototype.compiler = function( tmpNode ) {
-            let realHTMLDOM = this._templateDOM.cloneNode( true ); // 用模板拷贝 得到一个 准DOM
+        GVue.prototype.compiler = function (tmpNode) {
+            let realHTMLDOM = this._templateDOM.cloneNode(true); // 用模板拷贝 得到一个 准DOM
             compiler(realHTMLDOM, this._data);
-            this.update( realHTMLDOM );
+            this.update(realHTMLDOM);
         };
 
         /** 将 DOM 元素放到页面中 */
-        GVue.prototype.update = function(real) {
+        GVue.prototype.update = function (real) {
             this._parent.replaceChild(real, document.querySelector('#root'));
         };
 
@@ -81,4 +83,5 @@
         })
     </script>
 </body>
+
 </html>
