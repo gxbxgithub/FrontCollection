@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>迭代器</title>
+</head>
+
+<body>
+    <script>
+        //声明一个数组
+        const xiyou = ['唐僧', '孙悟空', '猪八戒', '沙僧'];
+
+        //使用 for...of 遍历数组
+        // for(let v of xiyou){
+        //     console.log(v);
+        // }
+
+        let iterator = xiyou[Symbol.iterator]();
+
+        //调用对象的next方法
+        console.log(iterator.next());
+        console.log(iterator.next());
+        console.log(iterator.next());
+        console.log(iterator.next());
+        console.log(iterator.next());
+
+
+
+
+
+
+
+
+
+
+
+        /**
+        自定义的迭代器
+        迭代器定义：迭代器是通过使用next()方法实现迭代协议的任何一个对象
+        返回：该方法返回一个对象{value: xxx, done: false/true}
+        迭代一个迭代器称为消耗了这个迭代器，因为通常只能执行一次，产生终止值后，继续调用next()会继续返回{done: true}
+        */
+        function makeRangeIterator(start = 0, end = Infinity, step = 1) {
+            let nextIndex = start
+            let iterationCount = 0
+
+            const rangeIterator = {
+                next() {
+                    if (nextIndex < end) {
+                        let result = { value: nextIndex, done: false }
+                        nextIndex += step
+                        iterationCount++
+                        return result
+                    }
+                    return { value: iterationCount, done: true }
+                }
+            }
+            return rangeIterator
+        }
+
+        let it = makeRangeIterator(1, 10, 2)
+        let result = it.next()
+        while (!result.done) {
+            console.log(`value = ${result.value}`)
+            result = it.next()
+        }
+        console.log(`Iterator over sequence of size: ${result.value}`)
+        console.log(it.next())
+
+
+        /* 以上例子通过 生成器写法 如下： */
+        function* makeRangeIterator2(start = 0, end = Infinity, step = 1) {
+            for (var i = start; i < end; i += step) {
+                yield i
+            }
+        }
+        let it2 = makeRangeIterator2(1, 10, 2)
+        let rst = it2.next()
+        while(!rst.done) {
+            console.log(`value = ${rst.value}`)
+            rst = it2.next()
+        }
+        console.log(`Iterator over sequence of size: ${rst.value}`)
+
+    </script>
+</body>
+
+</html>

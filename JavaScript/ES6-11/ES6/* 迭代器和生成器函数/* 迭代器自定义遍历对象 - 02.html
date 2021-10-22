@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自定义遍历数据</title>
+</head>
+
+<body>
+    <script>
+        /**
+        可迭代对象：
+        若一个对象拥有迭代行为，比如在 for...of 中会循环哪些值，那么那个对象便是一个可迭代对象
+        String、Array、TypedArray、Map 和 Set 都是内置可迭代对象，因为它们的原型对象都拥有一个 Symbol.iterator 方法。
+        为了实现可迭代，一个对象必须实现 @@iterator 方法，这意味着这个对象（或其原型链中的任意一个对象）必须具有一个带 Symbol.iterator 键（key）的属性。
+        */
+
+        //声明一个自定义的可迭代对象
+        const banji = {
+            name: "终极一班",
+            stus: [
+                'xiaoming',
+                'xiaoning',
+                'xiaotian',
+                'knight'
+            ],
+            // 具备 Symbol.iterator 键（key）的属性
+            [Symbol.iterator]: function () {
+                //索引变量
+                let index = 0;
+                //
+                let _this = this;
+                return {
+                    next: function () {
+                        if (index < _this.stus.length) {
+                            const result = { value: _this.stus[index], done: false };
+                            //下标自增
+                            index++;
+                            //返回结果
+                            return result;
+                        } else {
+                            return { value: undefined, done: true };
+                        }
+                    }
+                };
+            }
+        }
+
+        //遍历这个对象 
+        for (let v of banji) {
+            console.log(v); // 此处返回 next() 中的 value 属性值
+        }
+
+        console.log('<---- 使用生成器的迭代器 ---->')
+        let myIterator = {
+            [Symbol.iterator]: function* () {
+                yield 1
+                yield 2
+                yield 3
+            }
+        }
+        for (let v of myIterator) {
+            console.log(v)
+        }
+        console.log(...myIterator)
+    </script>
+</body>
+
+</html>
