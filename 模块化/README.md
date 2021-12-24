@@ -32,7 +32,7 @@ exports.xxx = value
 require(xxx)
 ```
 
-## AMD
+## AMD - 依赖前置
 
 目前，主要有两个Javascript库实现了AMD规范：require.js和curl.js
 

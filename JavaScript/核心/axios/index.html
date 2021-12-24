@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script src="./axios-test.js"></script>
+  <script src="./fetchRequest.js"></script>
+
+  <script>
+    let params = {
+      app: 'weather.today',
+      weaId: 1,
+      appkey: 10003,
+      sign: 'b59bc3ef6191eb9f747dd4e83c99f2a4',
+      format: 'json'
+    }
+    let url = 'http://api.k780.com/'
+    /*
+    axios({ method: 'GET', url, params, data: {} }).then(res => {
+      console.log(res)
+    }).catch(err => {
+      console.log(err)
+    })
+
+    axios.get(url, { params }).then(res => {
+      console.log(res)
+    }).catch(err => {
+      console.log(err)
+    })
+    */
+
+    let request = fetchRequest(url, 100)
+    request({
+      method: 'GET',
+      params,
+      data: {}
+    }).then(res => {
+      console.log(res)
+    }).catch(err => {
+      console.log(err)
+    })
+
+  </script>
+</body>
+
+</html>

@@ -43,15 +43,15 @@ export class Observer {
     this.value = value
     this.dep = new Dep()
     this.vmCount = 0
-    def(value, '__ob__', this)
-    if (Array.isArray(value)) {
+    def(value, '__ob__', this) // Object.defineProperty()
+    if (Array.isArray(value)) { // 1. 如果是数组
       if (hasProto) {
         protoAugment(value, arrayMethods)
       } else {
         copyAugment(value, arrayMethods, arrayKeys)
       }
       this.observeArray(value)
-    } else {
+    } else { // 2. 如果是对象
       this.walk(value)
     }
   }

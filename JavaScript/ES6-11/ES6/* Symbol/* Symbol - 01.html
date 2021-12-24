@@ -8,7 +8,8 @@
 <body>
     <script>
         /**
-        1. Symbol 的值是唯一的，用来解决命名冲突的问题
+        定义：symbol 是一种基本数据类型。Symbol() 函数返回 symbol 类型的值
+        1. Symbol() 返回的 symbol 值是唯一的，可以用来解决命名冲突的问题（一个symbol值能作为对象属性的标识符；这是该数据类型仅有的目的）
         2. Symbol 的值不能与其他数据进行运算
         3. Symbol 定义的对象属性不能使用 for...in 循环遍历，但是可以使用 Reflect.ownKeys 来获取对象的所有键名
         */

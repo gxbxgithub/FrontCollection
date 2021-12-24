@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function safeGet(input, path, defaultValue) {
+      if (typeof input != 'object' && Array.isArray(input)) return defaultValue
+      let reg = /\[(\d)\]/g
+      let arr = reg.exec(path)
+      while(arr) {
+        path = path.replace(arr[0], arr['index'] > 0 ? '.' + arr[1] : arr[1])
+        arr = reg.exec(path)
+      }
+      path = path.split('.')
+      let result = path.reduce((newObj, k) => {
+        if (newObj) {
+          return newObj[k]
+        }
+        return undefined
+      }, input)
+      return result || defaultValue
+    }
+
+    const a = {b:{c:{d: [1]}}}
+    let rst = safeGet(a, 'b.c.d[0]', 0) // 1
+    // let rst = safeGet(a, 'b.d[0]', 0) // 0
+    console.log(rst)
+  </script>
+</body>
+</html>

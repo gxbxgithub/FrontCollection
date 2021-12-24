@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    /**
+    * 顺风车问题
+    */
+    function hasOk(trips, capacity) {
+      let begin = 1000, end = 0
+      trips.forEach(item => {
+        let [min, max] = [item[1], item[2]]
+        begin = min < begin ? min : begin
+        end = max > end ? max : end
+      })
+      let ok = true
+      for (let i = begin; i <= end; i++) {
+        let userCount = 0
+        for (let item of trips) {
+          let [min, max] = item.slice(1)
+          if (i >= min && i < max) {
+            userCount += item[0]
+            if (userCount > capacity) {
+              ok = false
+              break
+            }
+          }
+        }
+        if (!ok) break
+      }
+      return ok
+    }
+
+
+    function isOk(trips, capacity) {
+      for (let i = 0; i < trips.length; i ++) {
+        let trip = trips[i]
+        let count = trip[0]
+        let [a1, b1] = [trip[1], trip[2]]
+        let [min, max] = [trip[1], trip[2]]
+        for (let j = i + 1; j < trips.length; j ++) {
+          let nextTrip = trips[j]
+          let [a2, b2] = [nextTrip[1], nextTrip[2]]
+          if ((a2 >= a1 && a2 < b1) || (a1 >= a2 && a1 < b2)) {
+            count += nextTrip[0]
+          }
+          if (count > capacity) return false
+        }
+      }
+      return true
+    }
+  </script>
+</body>
+
+</html>

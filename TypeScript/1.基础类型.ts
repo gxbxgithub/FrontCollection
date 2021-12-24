@@ -28,7 +28,7 @@
   let a3: number = 0o12 // 八进制
   let a4: number = 0xa // 十六进制
 
-  // 字符创类型
+  // 字符串类型
   let str1: string = '窗前明月光'
   let str2: string = '疑是地上霜'
   console.log(`${str1}, ${str2}`)

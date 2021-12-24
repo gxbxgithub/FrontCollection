@@ -1,6 +1,6 @@
 <template>
   <div class="todo-header">
-    <input type="text" v-model="title" placeholder="请输入你的任务名称，按回车键确认" @keyup.enter="add" />
+    <input type="text" v-model.trim="title" placeholder="请输入你的任务名称，按回车键确认" @keyup.enter="add" />
   </div>
 </template>
 
@@ -18,7 +18,7 @@ export default defineComponent({
   setup(props) {
     const title = ref('')
     const add = () => {
-      const text = title.value.trim()
+      const text = title.value
       if (!text) return
       const todo = {
         id: Date.now(),
