@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>01.开发属于自己的JS库</title>
+</head>
+
+<body>
+  <div>001</div>
+  <div>002</div>
+  <div>003</div>
+  <span class="div1">001</span>
+
+  <script>
+    // 实现一个自定义方法，把所有的元素写入到这个方法中去，之后在lib中返回这个对象，在这个对象原型上添加css方法
+    // 基础框架，匿名的自执行函数
+    (function (global) {
+
+      function lib(selector) {
+        return new Tt(selector);
+      }
+
+      function Tt(selector) {
+        let eles = document.querySelectorAll(selector);
+        for (let i = 0; i < eles.length; i++) {
+          this[i] = eles[i]
+        }
+        this.length = eles.length
+      }
+
+      Tt.prototype = {
+        constructor: Tt, // 否则会指向 object
+
+        css(name, value) {
+          for (let i = 0; i < this.length; i++) {
+            let ele = this[i];
+            ele.style[name] = value;
+          }
+        },
+
+        // 扩展方法
+        girlfriend() {
+          console.log('我要找个女朋友')
+          return this
+        },
+        singledog() {
+          console.log('你是一个单身狗吗')
+        }
+      }
+
+      // 不使用箭头函数，箭头函数没有 prototype 属性
+      /*Tt.prototype.css = function (name, value) {
+        for (let i = 0; i < this.length; i++) {
+          let ele = this[i];
+          ele.style[name] = value;
+        }
+      }*/
+
+      // 把lib赋值给谁 实现一个统一的入口
+      window.$ = window.lib = lib;
+
+    })(window);
+
+    $('div').css('color', 'red')
+    $('.div1').css('color', 'green')
+    $('div').girlfriend().singledog()
+
+    console.log($('div').css === $('.div1').css)
+  </script>
+</body>
+
+</html>
