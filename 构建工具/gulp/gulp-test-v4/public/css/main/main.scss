@@ -1,0 +1,11 @@
+@import './variable.scss';
+
+body{
+  background: $line-color;
+  color: $normal-color;
+  .main{
+    color: $main-color;
+    font-size: 28px;
+    font-weight: bold;
+  }
+}
