@@ -3,9 +3,11 @@
 body{
   background: $line-color;
   color: $normal-color;
+  display: flex;
   .main{
     color: $main-color;
     font-size: 28px;
     font-weight: bold;
+    transform: none;
   }
 }

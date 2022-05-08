@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #line {
+      display: block;
+      margin: 0 auto;
+      border: 1px solid #eee;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="line" width="400" height="400">您的浏览器版本太低，请升级浏览器！</canvas>
+
+  <script>
+    /*var canvas = document.querySelector('#line');
+    var ctx = canvas.getContext('2d');
+    ctx.beginPath();
+    ctx.moveTo(100, 100);
+    ctx.lineTo(200, 200);
+    ctx.lineTo(100, 300);
+    ctx.stroke();*/
+
+    function draw() {
+      var canvas = document.getElementById('line');
+      if (canvas.getContext) {
+        var ctx = canvas.getContext('2d');
+
+        ctx.beginPath();
+        ctx.arc(75, 75, 50, 0, Math.PI * 2, true); // 绘制
+        ctx.moveTo(110, 75);
+        ctx.arc(75, 75, 35, 0, Math.PI, false);   // 口(顺时针)
+        ctx.moveTo(65, 65);
+        ctx.arc(60, 65, 5, 0, Math.PI * 2, true);  // 左眼
+        ctx.moveTo(95, 65);
+        ctx.arc(90, 65, 5, 0, Math.PI * 2, true);  // 右眼
+        ctx.stroke();
+      }
+    }
+
+    function draw2() {
+      var ctx = document.getElementById('line').getContext('2d');
+      ctx.translate(75,75);
+    
+      for (var i=1;i<6;i++){ // Loop through rings (from inside to out)
+        ctx.save();
+        ctx.fillStyle = 'rgb('+(51*i)+','+(255-51*i)+',255)';
+    
+        for (var j=0;j<i*6;j++){ // draw individual dots
+          ctx.rotate(Math.PI*2/(i*6));
+          ctx.beginPath();
+          ctx.arc(0,i*12.5,5,0,Math.PI*2,true);
+          ctx.fill();
+        }
+    
+        ctx.restore();
+      }
+    }
+
+    draw2();
+  </script>
+</body>
+
+</html>

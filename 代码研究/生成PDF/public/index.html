@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+  <!-- <title><%= htmlWebpackPlugin.options.title %></title> -->
+  <title>中国儿童生长发育智能评估与监测系统</title>
+  <script src="static/js/webversion.js?v=1.0.0"> </script>
+  <script src="static/js/chratBackgroundImg.js"> </script>
+  <script src="static/js/tool.js"> </script>
+  <script>
+    window.onload = function () {
+      if (localStorage.getItem("webversion")) {
+        var currversion = localStorage.getItem("webversion");
+        console.log(currversion);
+        if (webversion.webversion != currversion) {
+          localStorage.setItem("webversion", webversion.webversion);
+          location.reload();
+        }
+      }
+      else {
+        localStorage.setItem("webversion", webversion.webversion);
+        location.reload();
+      }
+
+      var userAgent = navigator.userAgent; //取得浏览器的userAgent字符串            
+      var isChrome = userAgent.indexOf("Chrome") > -1 && userAgent.indexOf("Safari") > -1 && userAgent.indexOf("Edge") == -1 && userAgent.indexOf("OPR") == -1; //Chrome浏览器     
+      if (!isChrome) {
+        document.getElementsByTagName("body")[0].removeChild(document.getElementById("app"));
+        var str = "系统不兼容此浏览器";
+        var str3 = "";
+        var str2 = "Windows 64位系统推荐您使用:<a href='http://downapp.kidgrow.com/chrome_64.exe' style='color:blue;'>Chrome(x64)</a><br/><br/>" +
+          "XP系统推荐使用：<a href='http://downapp.kidgrow.com/chrome_86.exe' style='color:blue;'>Chrome for XP(x86)</a><br/><br/>" +
+          "Windows 32位系统推荐使用：<a href='http://downapp.kidgrow.com/chrome_32_noxp.exe' style='color:blue;'>Chrome(x86)</a><br/><br/>" +
+          "Mac系统推荐使用：<a href='http://downapp.kidgrow.com/googlechrome.dmg' style='color:blue;'>Chrome</a>";
+        document.writeln("<pre style='text-align:center; height:100%;border:0;position:fixed;top:0;left:0;width:100%;z-index:1234'>" +
+          "<h1 style='padding-top:200px;margin:0;color:red;'><strong>" + str + "<br/></strong></h1><br/>" +
+          "<h2 style='margin:0'><strong>如果您使用的是双核浏览器,请切换到极速(高速)模式。<br/></strong></h2><br/>" +
+          "<h2>" + str3 + "</h2><h2>" + str2 + "</h2>" +
+          "<h2 style='margin:0'><strong>如果系统仍不能正常使用，请联系您的服务顾问！<br/></strong></h2><br/>" + "</pre>");
+        document.execCommand("Stop");
+      }
+    };
+  </script>
+</head>
+
+<body>
+  <noscript>
+    <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled.
+      Please enable it to continue.</strong>
+  </noscript>
+  <div id="app"></div>
+  <!-- built files will be auto injected -->
+</body>
+
+</html>

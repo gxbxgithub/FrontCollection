@@ -2,6 +2,7 @@
  * 定义：
  * 每个对象拥有一个原型对象，对象以其原型为模板、从原型继承方法和属性。
  * 原型对象也可能拥有原型，并从中继承方法和属性，一层一层、以此类推。这种关系常被称为【原型链】。
+ * 每个实例对象（object）都有一个私有属性（称之为 __proto__ ）指向它的构造函数的原型对象（prototype） ---> {}.__proto__ === Object.prototype
  * 
  * 名称：
  * - prototype: 原型
@@ -23,7 +24,10 @@ console.log('-------------- Person --------------');
 let person = new Person()
 console.log('Person.prototype ---', Person.prototype);
 console.log(person.__proto__ === Person.prototype);
-console.log();
+console.log(Person.__proto__ === Function.prototype);
+console.log(Function.__proto__ === Function.prototype);
+console.log(Function.__proto__ === Object.prototype);
+console.log(Object.__proto__ === Function.prototype);
 
 
 console.log('-------------- Student --------------');

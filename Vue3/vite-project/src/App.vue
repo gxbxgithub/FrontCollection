@@ -1,13 +1,69 @@
-<script setup>
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
   <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Hello Vue 3 + Vite" />
+
+  <hr />
+
+  <h1 ref="h1" :name="name">{{ name }}</h1>
+  <ul>
+    <li v-for="child in children">{{ child.name }}</li>
+  </ul>
 </template>
+
+<script>
+import { defineComponent, onMounted, reactive, toRefs, watch, ref } from "@vue/runtime-core";
+import _ from 'lodash'
+export default defineComponent({
+  name: "App",
+  setup(props, context) {
+
+    console.log(context);
+
+    const refsData = reactive({
+      name: "guoxb",
+      children: [
+        {
+          name: "guoxx",
+        },
+      ],
+      a: {
+        b: 1,
+      },
+    });
+
+    const { name, children, a } = toRefs(refsData);
+
+    console.log(name.value, children.value, a.value.b);
+
+    const state = reactive({
+      id: 1,
+      attributes: {
+        name: "",
+      },
+    });
+
+    watch(
+      () => _.cloneDeep(state),
+      (state, prevState) => {
+        console.log("deep", state, prevState);
+      },
+      { deep: true }
+    );
+
+    state.attributes.name = 'Alex'
+
+
+    const h1 = ref(null)
+    onMounted(() => {
+      console.log(h1.value);
+    })
+
+    return {
+      ...toRefs(refsData),
+      h1
+    };
+  },
+});
+</script>
 
 <style>
 #app {

@@ -33,6 +33,10 @@ const _scssHandler = () => {
   const sass = $.sass(require('sass'))
   return src('public/css/main/main.scss')
     .pipe(sass().on('error', sass.logError))
+    .pipe($.autoprefixer({
+      browsers: ['last 2 versions'],
+      cascade: false
+    }))
     .pipe($.cleanCss({ compatibility: 'ie8' }))
     .pipe($.rename({ suffix: '.bundle.min' }))
     .pipe(dest('dist/main/'))
